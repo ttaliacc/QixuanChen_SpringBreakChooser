@@ -7,4 +7,7 @@
         <item>French</item>
         <item>Japanese</item>
     </string-array>
+    <string name="start_record">Start Recording</string>
+    <string name="stop_record">Stop Recording</string>
+    <string name="hint">Say a phrase in the language you choose</string>
 </resources>

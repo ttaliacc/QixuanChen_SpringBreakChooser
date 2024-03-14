@@ -22,12 +22,26 @@
         android:layout_height="wrap_content"
         android:ems="20"
         android:inputType="text"
-        android:hint="Say a phrase in the language you choose"
+        android:hint="@string/hint"
         android:textSize="15sp"
         android:layout_marginTop="40dp"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner" />
+        app:layout_constraintTop_toBottomOf="@id/spinner"
+        app:layout_constraintBottom_toTopOf="@id/recordBtn"/>
+
+    <Button
+        android:id="@+id/recordBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_record"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="405dp"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        android:layout_marginTop="40dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
