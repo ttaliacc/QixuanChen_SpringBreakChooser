@@ -11,6 +11,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.speech.RecognizerIntent
+import android.view.View
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import java.util.Locale
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recorder: MediaRecorder
     private var conditions = DownloadConditions.Builder().requireWifi().build()
     private val REQUEST_CODE_SPEECH_INPUT = 1
+    private var language: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +47,21 @@ class MainActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinner.adapter = adapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                language = parent?.getItemAtPosition(position).toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                language = "English"
+            }
+        }
 
         record.setOnClickListener {
             startRecording()
@@ -77,6 +95,7 @@ class MainActivity : AppCompatActivity() {
             RecognizerIntent.EXTRA_LANGUAGE,
             Locale.getDefault()
         )
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLanguageCode(language))
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text")
         try {
             startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
@@ -90,22 +109,28 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
     }
+
+    private fun getLanguageCode(language: String): String {
+        return when (language) {
+            "English" -> "en"
+            "Chinese" -> "zh"
+            "Spanish" -> "es"
+            "French" -> "fr"
+            "Japanese" -> "ja"
+            else -> Locale.getDefault().language // Return device's default language if not found
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // in this method we are checking request
-        // code with our result code.
         if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             // on below line we are checking if result code is ok
             if (resultCode == RESULT_OK && data != null) {
 
-                // in that case we are extracting the
-                // data from our array list
                 val res: ArrayList<String> =
                     data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
 
-                // on below line we are setting data
-                // to our output text view.
                 editText.setText(
                     Objects.requireNonNull(res)[0]
                 )
