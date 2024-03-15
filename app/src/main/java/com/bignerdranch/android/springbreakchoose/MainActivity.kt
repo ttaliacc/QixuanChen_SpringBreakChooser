@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var lastAcceleration = 0f
     private lateinit var mediaPlayer: MediaPlayer
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -180,16 +181,19 @@ class MainActivity : AppCompatActivity() {
             if (acceleration > 12) {
                 Toast.makeText(applicationContext, "Shake event detected", Toast.LENGTH_SHORT).show()
                 playAudioForLanguage(language)
+
                 val locationUrl = when (language) {
-                    "English" -> "geo:40.6958091,-74.6035277"
-                    "Chinese" -> "geo:39.938417,116.0678134"
-                    "French" -> "geo:48.8588255,2.2646345"
+                    "English" -> "40.6958091,-74.6035277"
+                    "Chinese" -> "39.938417,116.0678134"
+                    "French" -> "48.8588255,2.2646345"
                     "Japanese" -> "35.5020584,138.4504996"
                     "Spanish" -> "19.3906594,-99.308425"
                     else -> return
                 }
-                val url = Uri.parse(locationUrl)
-                showMap(url)
+                // Start the MapsActivity
+                val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                intent.putExtra("LOCATION_URL", locationUrl)
+                startActivity(intent)
             }
         }
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -225,9 +229,4 @@ class MainActivity : AppCompatActivity() {
         mediaPlayer.release()
     }
 
-    private fun showMap(geoLocation: Uri) {
-        val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
-        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-        mapIntent.setPackage("com.google.android.apps.maps")
-    }
 }
